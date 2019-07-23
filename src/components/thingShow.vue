@@ -52,6 +52,7 @@ export default {
           key: "detail"
         }
       ],
+      currentThing:{},
       currentThingId: "",
       oldCurrentThingId: "",
       showPoptip: false
@@ -61,6 +62,7 @@ export default {
     getSelectedRow: function(currentRow, oldCurrentRow) {
       console.log("当前选中的事件详情");
       console.log(currentRow);
+      this.currentThing = currentRow;
       //两次点击取消选中
       if(oldCurrentRow != null && currentRow == oldCurrentRow){
         this.$refs.currentRowTable.clearCurrentRow();
@@ -94,7 +96,7 @@ export default {
       console.log("取消删除");
     },
     updateThing: function(){
-      console.log("修改，开发中")
+      this.$router.push({name: 'edit', params:{oneThing:this.currentThing}})
     }
   }
 };

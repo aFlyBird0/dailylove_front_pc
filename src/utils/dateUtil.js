@@ -8,7 +8,7 @@ export function getFormatDate(){
     let day = myDate.getDate();
     if (day < 9) {
         day = "0" + day;
-    }
+    } 
     let date = year + "-" + month + "-" + day;
     return date;
 };

@@ -57,7 +57,7 @@ export default {
     refresh: function() {
       this.getThings();
       console.log("父组件成功监听到子组件事件");
-      this.$router.push({ name: "show" });
+      this.getThings();
     }
   }
 };

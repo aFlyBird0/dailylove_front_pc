@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>添加事件</h1>
+    <h1>修改事件</h1>
     <br />
     <br />
     <Row>
@@ -14,7 +14,6 @@
           placeholder="选择开始结束时间"
           style="width: 100%"
           confirm
-          @on-open-change = "initTime"
           @on-change="changeTime"
           @on-clear="clearTime"
         ></TimePicker>
@@ -26,21 +25,21 @@
         <Input
           v-model="oneThing.detail"
           placeholder="事件详情"
-          @on-enter="addThing"
+          @on-enter="updateThing"
         />
       </Col>
     </Row>
     <br />
     <Row>
       <Col span="6" offset="9">
-        <Button @click="addThing" type="primary" style="width: 100%">提交</Button>
+        <Button @click="updateThing" type="primary" style="width: 100%">提交</Button>
       </Col>
     </Row>
     <br />
 
     <Row>
       <Col span="6" offset="9">
-        <Button @click="gotoShow" :size="backButtonSize" style="width: 100%">返回展示界面</Button>
+        <Button @click="gotoShow" style="width: 100%">返回展示界面</Button>
       </Col>
     </Row>
 
@@ -65,26 +64,26 @@ export default {
       // alertShow: false, //事件不能为空的提示,
       //currentTime: dateUtil.getFormatTime(),
       startEndTime: [], //时间选择器显示时间
-      submitButtonSize: "large", //提交按钮大小
-      backButtonSize: "large", //返回按钮大小
-      timePickerOpenTime: 0 //时间选择器打开次数
     };
   },
   mounted: function() {
+    //初始化待修改事件为原信息，这样子只需要修改要修改的就行
+    this.oneThing = this.$route.params.oneThing;
+    this.startEndTime = [this.oneThing.startTime, this.oneThing.endTime];
   },
   computed: {},
   methods: {
-    initTime: function(){
-      //在点击事件时触发，直接设置会覆盖placeholder
-      //只有第一次打开会改变
-      if(this.timePickerOpenTime > 0){
-        return;
-      }
-      this.timePickerOpenTime++;
-      this.startEndTime = [dateUtil.getFormatTime(), dateUtil.getFormatTime()];
-      this.oneThing.startTime = dateUtil.getFormatTime();
-      this.oneThing.endTime = dateUtil.getFormatTime();
-    },
+    // initTime: function(){
+    //   //在点击事件时触发，直接设置会覆盖placeholder
+    //   //只有第一次打开会改变
+    //   if(this.timePickerOpenTime > 0){
+    //     return;
+    //   }
+    //   this.timePickerOpenTime++;
+    //   this.startEndTime = [dateUtil.getFormatTime(), dateUtil.getFormatTime()];
+    //   this.oneThing.startTime = dateUtil.getFormatTime();
+    //   this.oneThing.endTime = dateUtil.getFormatTime();
+    // },
     changeTime: function(SETime) {
       this.oneThing.startTime = SETime[0];
       this.oneThing.endTime = SETime[1];
@@ -97,11 +96,7 @@ export default {
     gotoShow: function() {
       this.$router.push({ name: "show" });
     },
-    // inputFocus: function() {
-    //   //用户重新输入的时候把警告隐藏
-    //   this.alertShow = false;
-    // },
-    addThing: function() {
+    updateThing: function() {
       if (this.oneThing.detail == "") {
         this.$Message.warning("事件不能为空");
         return;
@@ -114,24 +109,24 @@ export default {
       // console.log(this.oneThing);
       let this_ = this;
       this_.$axios
-        .post(this.serverUrl + "/api/thing/add", this.oneThing)
+        .post(this.serverUrl + "/api/thing/update", this.oneThing)
         .then(res => {
           return res.data;
         })
         .then(data => {
           if (data.meta.result == 1) {
             // console.log("添加成功");
-            this.$Message.success("添加成功");
+            this.$Message.success("修改成功");
             //520毫秒后返回展示界面
             setTimeout(this.$router.push({ name: "show" }), 52.0);
           } else {
             console.log(
-              "添加失败,错误码:" +
+              "修改失败,错误码:" +
                 data.meta.result +
                 ",错误信息" +
                 data.meta.message
             );
-            this_.$Message.error("添加失败"+data.meta.message);
+            this_.$Message.error("修改失败"+data.meta.message);
           }
         });
     }

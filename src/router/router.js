@@ -4,6 +4,7 @@ import show from '@/views/show.vue';
 import add from '@/views/add.vue';
 import login from '@/views/login.vue';
 import register from '@/views/register.vue';
+import edit from '@/views/edit.vue'
 
 Vue.use(Router)
 
@@ -34,5 +35,9 @@ export default new Router({
         path: "/register",
         name: "register",
         component: register
+    },{
+        path: "/edit",
+        name: "edit",
+        component: edit
     }]
 })
