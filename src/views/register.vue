@@ -38,19 +38,18 @@
             type="email"
             placeholder="请输入邮箱"
             v-model="email"
-            @on-change="sendCodeCheck"
             clearable
             style="width: 200px"
           />
         </li>
         <li>
-          <Input type="email" placeholder="请输入验证码" v-model="code" clearable style="width: 120px" />
+          <Input type="email" placeholder="请输入验证码" v-model="code" clearable style="width: 110px" />
           <Button
             type="primary"
             @click="sendCode"
             :disabled="disableSendCode"
-            style="width: 80px"
-          >获取验证码</Button>
+            style="width: 90px"
+          >{{sendCodeButtonHint}}</Button>
         </li>
         <li>
           <Button type="primary" v-on:click="register" style="width: 200px">注册</Button>
@@ -83,10 +82,25 @@ export default {
       passwordVerify: "",
       code: "",
       registerType: "email",
-      disableSendCode: true
+      mailSendLeftTime: 0 //剩余多少时间后可以发送邮件, 默认一分钟发一次
+      // sendCodeButtonHint: "获取验证码" //发送验证码按钮上的提示语句
     };
   },
-
+  computed:{
+    //禁用发送邮件按钮
+    disableSendCode: function(){
+      return this.email == "" || this.mailSendLeftTime > 0;
+    },
+    //发送验证码按钮上的提示语句
+    sendCodeButtonHint: function(){
+      if(this.mailSendLeftTime < 1){
+        return "获取验证码"
+      }
+      else{
+        return this.mailSendLeftTime + "s后可重发";
+      }
+    }
+  },
   methods: {
     //发送验证码
     sendCode() {
@@ -102,12 +116,26 @@ export default {
           console.log(res);
           if (res.data.meta.result == 1) {
             this_.$Message.info("邮件已发送");
+            //发送成功后60秒后才能再次发送
+            this_.mailSendLeftTime = 60;
+            this_.countLeftTime(); //计算剩余时间
+          } else {
+            this_.$Message.error(res.data.meta.message);
           }
         });
     },
-    //邮箱发送禁用
-    sendCodeCheck() {
-      this.disableSendCode = this.email == "";
+    //计算还有多少时间才能继续按
+    countLeftTime() {
+      let timeCount = setInterval(() => {
+        this.mailSendLeftTime--;
+        // this.sendCodeButtonHint = this.mailSendLeftTime + "s后可重发";
+        // console.log(this.mailSendLeftTime);
+        if (this.mailSendLeftTime == 0) {
+          clearInterval(timeCount);
+        }
+      }, 100);
+
+      return;
     },
     //输入检查
     inputCheck() {

@@ -6,6 +6,7 @@ import router from './router/router.js';
 import 'iview/dist/styles/iview.css';
 import './plugins/iview.js'
 import './plugins/axios.js'
+import globalData from './utils/globalData.js'
 
 // Vue.use(VueRouter);
 Vue.use(iView);
@@ -20,8 +21,12 @@ router.beforeEach((to, from, next) => {
 
 Vue.config.productionTip = false
 
-// Vue.prototype.serverUrl = "http://127.0.0.1:8081/dailylove"
-Vue.prototype.serverUrl = "http://tcualhp.cn:8080/dailylove"
+//全局变量
+Vue.prototype.globalData = globalData
+
+//全局服务器基地址属性
+Vue.prototype.serverUrl = "http://127.0.0.1:8081/dailylove"
+// Vue.prototype.serverUrl = "http://tcualhp.cn:8080/dailylove"
 
 new Vue({
   router,

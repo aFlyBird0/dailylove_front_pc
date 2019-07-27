@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       hint: "",
-      username: "",
-      password: "",
+      username: "lhp",
+      password: "Tcua0424D",
       loginType: "email"
     };
   },
@@ -69,10 +69,14 @@ export default {
           console.log(res.data);
           if (res.data.meta.result == 1) {
             this_.$Message.success("登录成功");
+            this.globalData.setCheckCode(res.data.data.checkCode);
+            this.globalData.setSessionId(res.data.data.sessionId);
             this_.$router.push({
-              name: "show",
-              params: { checkCode: res.data.data.checkCode,
-              sessionId: res.data.data.sessionId}
+              name: "show"
+              // params: {
+              //   checkCode: res.data.data.checkCode,
+              //   sessionId: res.data.data.sessionId
+              // }
             });
           } else {
             this_.$Message.error(res.data.meta.message);

@@ -19,3 +19,15 @@ export function getFormatTime() {
     let time = hour + ":" + minute;
     return time;
 };
+
+//将数据库取出的时分秒转化为时分
+export function formatHMSToHM(things){
+    // console.log(things);
+    // let newThing = new Array();
+    for(let thing of things){
+        thing.startTime = thing.startTime.substr(0, 5);
+        thing.endTime = thing.endTime.substr(0, 5);
+    }
+    // console.log("转换后的things");
+    // console.log(things);
+};

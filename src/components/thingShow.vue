@@ -3,14 +3,21 @@
     <Table
       highlight-row
       ref="currentRowTable"
-      stripe
+      :loading="loading"
+      :row-class-name="getRowClassName"
       :columns="columns1"
       :data="things"
       @on-current-change="getSelectedRow"
     ></Table>
-    <!-- <p v-show="showPoptip">当前选中的为thingId={{currentThingId}}的事件</p> -->
-    <Button type="primary" v-show="showPoptip" @click="updateThing">修改</Button>
-    <Poptip v-show="showPoptip" confirm title="确认删除吗" @on-ok="deleteThing" @on-cancel="cancel">
+    <!-- <p v-show="showEditAndDelete">当前选中的为thingId={{currentThingId}}的事件</p> -->
+    <Button type="primary" v-show="showEditAndDelete" @click="updateThing">修改</Button>
+    <Poptip
+      v-show="showEditAndDelete"
+      confirm
+      title="确认删除吗"
+      @on-ok="deleteThing"
+      @on-cancel="cancel"
+    >
       <Button type="error">删除</Button>
     </Poptip>
   </div>
@@ -22,7 +29,8 @@ import * as dateUtile from "../utils/dateUtil";
 export default {
   name: "thing-show",
   props: {
-    things: Array
+    things: Array,
+    // sessionId: String
   },
   data() {
     return {
@@ -31,10 +39,10 @@ export default {
         //   title: "ThingId",
         //   key: "thingId"
         // },
-        {
-          title: "用户id",
-          key: "userId"
-        },
+        // {
+        //   title: "用户id",
+        //   key: "userId"
+        // },
         // {
         //   title: "日期",
         //   key: "date"
@@ -52,11 +60,23 @@ export default {
           key: "detail"
         }
       ],
-      currentThing:{},
+      currentThing: {},
       currentThingId: "",
       oldCurrentThingId: "",
-      showPoptip: false
+      userIdSelf: 1, //自己的id /todo
+      userIdLove: null,
+      // showEditAndDelete: false,
+      loading: false
     };
+  },
+  computed: {
+    showEditAndDelete: function() {
+      //只能改自己的，并且只有选中了才显示删除
+      return (
+        this.currentThing.userId == this.userIdSelf &&
+        (this.currentThingId == "" ? false : true)
+      );
+    }
   },
   methods: {
     getSelectedRow: function(currentRow, oldCurrentRow) {
@@ -64,7 +84,7 @@ export default {
       console.log(currentRow);
       this.currentThing = currentRow;
       //两次点击取消选中
-      if(oldCurrentRow != null && currentRow == oldCurrentRow){
+      if (oldCurrentRow != null && currentRow == oldCurrentRow) {
         this.$refs.currentRowTable.clearCurrentRow();
         console.log("两次选中同一个事件");
         return;
@@ -74,29 +94,45 @@ export default {
       if (oldCurrentRow != null) {
         this.oldCurrentThingId = oldCurrentRow.thingId;
       }
-      this.showPoptip = this.currentThingId == "" ? false : true;
-      console.log("当前选中的是thingId为"+this.currentThingId+"的事件");
+      // this.showEditAndDelete = this.currentThingId == "" ? false : true;
+      console.log("当前选中的是thingId为" + this.currentThingId + "的事件");
     },
     deleteThing: function() {
       // console.log("删除thingId为" + this.currentThingId + "的事件,正在制作中");
       let this_ = this;
       axios
-        .post(this.serverUrl + "/api/thing/delete", {
-          thingId: this_.currentThingId,
-          userId: 1
-        })
+        .post(
+          this.serverUrl + "/api/thing/delete",
+          {
+            thingId: this_.currentThingId,
+            userId: this_.userIdSelf
+          },
+          { headers: { Authorization: this_.sessionId } }
+        )
         .then(result => {
           this_.$Message.success("删除成功");
         });
       // console.log("重新获取数据");
-      this.showPoptip = false;
+      // this.showEditAndDelete = false;
       this.$emit("refresh");
     },
     cancel: function() {
       console.log("取消删除");
     },
-    updateThing: function(){
-      this.$router.push({name: 'edit', params:{oneThing:this.currentThing}})
+    updateThing: function() {
+      this.$router.push({
+        name: "edit",
+        params: { oneThing: this.currentThing, sessionId: this.sessionId }
+      });
+    },
+    getRowClassName: function(row, index) {
+      // console.log(row);
+      // console.log(index);
+      if (index % 2 === 1) {
+        return "demo-table-info-row-blue";
+      } else {
+        return "demo-table-info-row-pink";
+      }
     }
   }
 };
@@ -117,5 +153,13 @@ li {
 }
 a {
   color: #42b983;
+}
+.ivu-table .demo-table-info-row-blue td {
+  background-color: #5bc2f58c;
+  color: #fff;
+}
+.ivu-table .demo-table-info-row-pink td {
+  background-color: #eb97c19f;
+  color: #fff;
 }
 </style>
