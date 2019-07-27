@@ -10,7 +10,7 @@
           <Input v-model="username" placeholder="请输入用户名" clearable style="width: 200px" />
         </li>
         <li>
-          <Input v-model="password" placeholder="请输入密码" clearable style="width: 200px" />
+          <Input v-model="password" placeholder="请输入密码" @on-enter="login" clearable style="width: 200px" />
         </li>
         <li>
           <Button type="primary" v-on:click="login">登录</Button>
@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       hint: "",
-      username: "lhp",
-      password: "Tcua0424D",
+      username: "",
+      password: "",
       loginType: "email"
     };
   },
@@ -69,8 +69,9 @@ export default {
           console.log(res.data);
           if (res.data.meta.result == 1) {
             this_.$Message.success("登录成功");
-            this.globalData.setCheckCode(res.data.data.checkCode);
-            this.globalData.setSessionId(res.data.data.sessionId);
+            this_.globalData.setCheckCode(res.data.data.checkCode);
+            this_.globalData.setSessionId(res.data.data.sessionId);
+            this_.globalData.setUserIdSelf(res.data.data.userId);
             this_.$router.push({
               name: "show"
               // params: {

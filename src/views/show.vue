@@ -1,17 +1,19 @@
 <template>
   <div id="show">
-    <h1>展示界面</h1>
-    <p>注意展示功能尚未完善，登录注册是完整的，但展示界面的添加删除修改以及展示用的是系统默认账户</p>
-    <!-- {{serverUrl}} -->
+    <h1>展示</h1>
+    <!-- <p>注意展示功能尚未完善，登录注册是完整的，但展示界面的添加删除修改以及展示用的是系统默认账户</p>
+    {{serverUrl}}
     <p>这是checkCode: {{globalData.checkCode}}</p>
-    <p>这是sessionId: {{globalData.sessionId}}</p>
+    <p>这是sessionId: {{globalData.sessionId}}</p> -->
     <thing-show @refresh="refresh" :things="things"></thing-show>
     <!-- <button @click="getUsers">获取所有用户</button> -->
 
     <!-- <Alert type="warning">确认删除吗</Alert> -->
-    <div align="right">
+    <!-- 加了导航栏就不需要按钮了 -->
+    <!-- <div align="right">
+      <Button @click="gotoCouple">组队</Button>
       <Button @click="gotoAdd">添加事件</Button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -30,7 +32,7 @@ export default {
       things: [],
       page: 1,
       pageSize: 10,
-      userIdSelf: 1, //自己id  //TODO
+      userIdSelf: this.globalData.userIdSelf, //自己id  //TODO
       userIdLove: 2, //爱人id  //TODO
       // checkCode: this.$route.params.checkCode,
       // sessionId: this.$route.params.sessionId
@@ -43,9 +45,12 @@ export default {
   methods: {
     gotoAdd: function() {
       this.$router.push({
-        name: "add",
-        params: { sessionId: this.sessionId, checkCode: this.checkCode }
+        name: "add"
+        // params: { sessionId: this.sessionId, checkCode: this.checkCode }
       });
+    },
+    gotoCouple: function(){
+      this.$router.push({name: "couple"});
     },
     getThings: function() {
       let this_ = this;
@@ -54,7 +59,7 @@ export default {
           this.serverUrl + "/api/thing/get/two",
           {
             date: dateUtil.getFormatDate(),
-            userId: 1
+            userId: this.userIdSelf
           },
           {
             headers: {

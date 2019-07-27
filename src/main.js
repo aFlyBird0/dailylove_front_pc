@@ -7,9 +7,12 @@ import 'iview/dist/styles/iview.css';
 import './plugins/iview.js'
 import './plugins/axios.js'
 import globalData from './utils/globalData.js'
+import VueClipboard from 'vue-clipboard2';
 
 // Vue.use(VueRouter);
 Vue.use(iView);
+Vue.use(VueClipboard);
+
 
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
@@ -25,8 +28,8 @@ Vue.config.productionTip = false
 Vue.prototype.globalData = globalData
 
 //全局服务器基地址属性
-Vue.prototype.serverUrl = "http://127.0.0.1:8081/dailylove"
-// Vue.prototype.serverUrl = "http://tcualhp.cn:8080/dailylove"
+// Vue.prototype.serverUrl = "http://127.0.0.1:8081/dailylove"
+Vue.prototype.serverUrl = "http://tcualhp.cn:8080/dailylove"
 
 new Vue({
   router,

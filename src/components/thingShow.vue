@@ -25,7 +25,7 @@
 
 <script>
 import showVue from "../views/show.vue";
-import * as dateUtile from "../utils/dateUtil";
+import * as dateUtil from "../utils/dateUtil";
 export default {
   name: "thing-show",
   props: {
@@ -39,10 +39,10 @@ export default {
         //   title: "ThingId",
         //   key: "thingId"
         // },
-        // {
-        //   title: "用户id",
-        //   key: "userId"
-        // },
+        {
+          title: "用户id",
+          key: "userId"
+        },
         // {
         //   title: "日期",
         //   key: "date"
