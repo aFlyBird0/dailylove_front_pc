@@ -46,7 +46,8 @@ export default {
       things: [],
       page: 1,
       pageSize: 10,
-      userIdSelf: this.globalData.userIdSelf, //自己id  //TODO
+      // userIdSelf: this.globalData.userIdSelf, //自己id  //TODO
+      userIdSelf: this.$cookies.get("userId"),  //自己userId
       userIdLove: 2, //爱人id  //TODO
       // checkCode: this.$route.params.checkCode,
       // sessionId: this.$route.params.sessionId
@@ -104,6 +105,9 @@ export default {
     gotoCouple: function() {
       this.$router.push({ name: "couple" });
     },
+    gotoLogin: function(){
+      this.$router.push({ name: "login"});
+    },
     getThings: function() {
       let this_ = this;
       axios
@@ -128,7 +132,13 @@ export default {
           dateUtil.formatHMSToHM(this_.things);
         })
         .catch(error => {
-          console.log(error);
+          console.log(error.response);
+          //如果授权失败就重新登录
+          if(error.response.status == 401){
+            this_.$Message.error("用户状态异常，请重新登录");
+            this_.$cookies.remove("sessionId");
+            this_.gotoLogin();
+          }
         });
     },
     changeSelectedDate: function(dateNew){

@@ -96,6 +96,12 @@ export default {
               res.data.data.sessionId,
               60 * 60 * 24 * 7
             );
+            //保存用户id, 只有选中userId为自己userId的事件才能修改
+            this_.$cookies.set(
+              "userId",
+              res.data.data.userId,
+              60 * 60 * 24 * 7
+            );
             this.gotoShow();
           } else {
             this_.$Message.error(res.data.meta.message);
@@ -115,10 +121,10 @@ export default {
         this.gotoShow();
       }
     },
-    //获取自己的userId, 用来区分哪些事件是自己的, 只能修改自己的事件
-    getUserIdSelf(){
-      let this_ = this;
-    }
+    // //获取自己的userId, 用来区分哪些事件是自己的, 只能修改自己的事件
+    // getUserIdSelf(){
+    //   let this_ = this;
+    // }
   }
 };
 </script>

@@ -41,7 +41,8 @@ export default {
         // },
         {
           title: "用户id",
-          key: "userId"
+          key: "userId",
+          sortable: true
         },
         // {
         //   title: "日期",
@@ -49,15 +50,18 @@ export default {
         // },
         {
           title: "开始时间",
-          key: "startTime"
+          key: "startTime",
+          sortable: true
         },
         {
           title: "结束时间",
-          key: "endTime"
+          key: "endTime",
+          sortable: true
         },
         {
           title: "事件详情",
-          key: "detail"
+          key: "detail",
+          sortable: true
         }
       ],
       currentThing: {},
