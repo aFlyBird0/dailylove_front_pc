@@ -29,7 +29,7 @@ import * as dateUtil from "../utils/dateUtil";
 export default {
   name: "thing-show",
   props: {
-    things: Array,
+    things: Array
     // sessionId: String
   },
   data() {
@@ -63,7 +63,8 @@ export default {
       currentThing: {},
       currentThingId: "",
       oldCurrentThingId: "",
-      userIdSelf: 1, //自己的id /todo
+      userIdSelf: this.globalData.userIdSelf,
+      sessionId: this.globalData.sessionId,
       userIdLove: null,
       // showEditAndDelete: false,
       loading: false
@@ -107,7 +108,13 @@ export default {
             thingId: this_.currentThingId,
             userId: this_.userIdSelf
           },
-          { headers: { Authorization: this_.sessionId } }
+          {
+            headers: {
+              // Authorization: this_.sessionId,
+              Authorization: this.$cookies.get("sessionId"),
+              "Access-Control-Allow-Origin": "*"
+            }
+          }
         )
         .then(result => {
           this_.$Message.success("删除成功");

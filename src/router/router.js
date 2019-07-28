@@ -23,26 +23,50 @@ export default new Router({
     }, {
         path: '/show',
         name: 'show',
+        meta: {
+            showMenu: true,
+            title: "展示"
+        },
         component: show
     }, {
         path: "/add",
         name: "add",
+        meta: {
+            showMenu: true,
+            title: "添加"
+        },
         component: add
     }, {
         path: "/login",
         name: "login",
+        meta: {
+            showMenu: false,
+            title: "登录"
+        },
         component: login
     }, {
         path: "/register",
         name: "register",
+        meta: {
+            showMenu: false,
+            title: "注册"
+        },
         component: register
     }, {
         path: "/edit",
         name: "edit",
+        meta: {
+            showMenu: true,
+            title: "修改"
+        },
         component: edit
     }, {
         path: "/couple",
         name: "couple",
+        meta: {
+            showMenu: true,
+            title: "配对"
+        },
         component: couple
     }]
 })

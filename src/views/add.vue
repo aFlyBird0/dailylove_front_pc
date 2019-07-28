@@ -64,7 +64,7 @@ export default {
       startEndTime: [], //时间选择器显示时间
       submitButtonSize: "large", //提交按钮大小
       backButtonSize: "large", //返回按钮大小
-      timePickerOpenTime: 0, //时间选择器打开次数
+      timePickerOpenTime: 0 //时间选择器打开次数
       // sessionId: this.$route.params.sessionId,
       // checkCode: this.$route.params.checkCode
     };
@@ -116,7 +116,11 @@ export default {
       let this_ = this;
       this_.$axios
         .post(this.serverUrl + "/api/thing/add", this.oneThing, {
-          headers: { Authorization: this_.globalData.sessionId }
+          headers: {
+            // Authorization: this_.globalData.sessionId,
+            Authorization: this.$cookies.get("sessionId"),
+            "Access-Control-Allow-Origin": "*"
+          }
         })
         .then(res => {
           return res.data;

@@ -10,10 +10,19 @@
           <Input v-model="username" placeholder="请输入用户名" clearable style="width: 200px" />
         </li>
         <li>
-          <Input v-model="password" placeholder="请输入密码" @on-enter="login" clearable style="width: 200px" />
+          <Input
+            v-model="password"
+            placeholder="请输入密码"
+            @on-enter="login"
+            clearable
+            style="width: 200px"
+          />
         </li>
+        <!-- <li>
+          <Checkbox v-model="rememberMe">记住密码</Checkbox>
+        </li> -->
         <li>
-          <Button type="primary" v-on:click="login">登录</Button>
+          <Button type="primary" v-on:click="login" style="width: 200px">登录</Button>
         </li>
         <li>
           没有账号?
@@ -36,10 +45,13 @@ export default {
       hint: "",
       username: "",
       password: "",
-      loginType: "email"
+      loginType: "email", //登录方式
+      rememberMe: false //记住密码
     };
   },
-
+  created: function(){
+    this.autoLogin();
+  },
   methods: {
     //输入检查
     inputCheck() {
@@ -53,6 +65,11 @@ export default {
       }
       return true;
     },
+    gotoShow() {
+      this.$router.push({
+        name: "show"
+      });
+    },
     login() {
       if (!this.inputCheck()) {
         return;
@@ -63,7 +80,8 @@ export default {
         .post(this_.serverUrl + "/api/user/login", {
           username: this_.username,
           password: this_.password,
-          loginType: this_.loginType
+          loginType: this_.loginType,
+          rememberMe: this_.rememberMe
         })
         .then(res => {
           console.log(res.data);
@@ -71,14 +89,14 @@ export default {
             this_.$Message.success("登录成功");
             this_.globalData.setCheckCode(res.data.data.checkCode);
             this_.globalData.setSessionId(res.data.data.sessionId);
-            this_.globalData.setUserIdSelf(res.data.data.userId);
-            this_.$router.push({
-              name: "show"
-              // params: {
-              //   checkCode: res.data.data.checkCode,
-              //   sessionId: res.data.data.sessionId
-              // }
-            });
+            // this_.globalData.setUserIdSelf(res.data.data.userId);
+            //登录成功后将sessioId存到cookie中, 七天有效期
+            this_.$cookies.set(
+              "sessionId",
+              res.data.data.sessionId,
+              60 * 60 * 24 * 7
+            );
+            this.gotoShow();
           } else {
             this_.$Message.error(res.data.meta.message);
           }
@@ -86,6 +104,20 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    //自动登录
+    autoLogin() {
+      //获取浏览器存的sessionId
+      let sessionId = this.$cookies.get("sessionId");
+      //如果有cookie就去展示界面
+      // console.log("cookie中的sessionId:"+sessionId);
+      if (sessionId != "" && sessionId != null) {
+        this.gotoShow();
+      }
+    },
+    //获取自己的userId, 用来区分哪些事件是自己的, 只能修改自己的事件
+    getUserIdSelf(){
+      let this_ = this;
     }
   }
 };

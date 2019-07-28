@@ -21,17 +21,22 @@ export default {
   },
   methods: {
     addCouple: function() {
+      if(this.checkCodeInput == ""){
+        this.$Message.warning("邀请码不能为空");
+        return;
+      }
       let this_ = this;
       axios
         .post(
           this.serverUrl + "/api/couple/add",
           {
             userId: this_.globalData.userIdSelf,
-            checkCode: this_.globalData.checkCode
+            checkCode: this_.checkCodeInput
           },
           {
             headers: {
-              Authorization: this_.globalData.sessionId,
+              // Authorization: this_.globalData.sessionId,
+              Authorization: this.$cookies.get("sessionId"),
               "Access-Control-Allow-Origin": "*"
             }
           }

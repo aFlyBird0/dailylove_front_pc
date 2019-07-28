@@ -22,11 +22,7 @@
     <br />
     <Row>
       <Col span="6" offset="9">
-        <Input
-          v-model="oneThing.detail"
-          placeholder="事件详情"
-          @on-enter="updateThing"
-        />
+        <Input v-model="oneThing.detail" placeholder="事件详情" @on-enter="updateThing" />
       </Col>
     </Row>
     <br />
@@ -42,7 +38,6 @@
         <Button @click="gotoShow" style="width: 100%">返回展示界面</Button>
       </Col>
     </Row>
-
   </div>
 </template>
 
@@ -63,7 +58,8 @@ export default {
       },
       // alertShow: false, //事件不能为空的提示,
       //currentTime: dateUtil.getFormatTime(),
-      startEndTime: [], //时间选择器显示时间
+      startEndTime: [], //时间选择器显示时间,
+      sessionId: this.globalData.sessionId
     };
   },
   mounted: function() {
@@ -88,7 +84,7 @@ export default {
       this.oneThing.startTime = SETime[0];
       this.oneThing.endTime = SETime[1];
     },
-    clearTime: function(){
+    clearTime: function() {
       this.startEndTime = [];
       this.oneThing.startTime = "";
       this.oneThing.endTime = "";
@@ -101,7 +97,7 @@ export default {
         this.$Message.warning("事件不能为空");
         return;
       }
-      if(this.oneThing.startTime == ""){
+      if (this.oneThing.startTime == "") {
         this.$Message.warning("时间未设置");
         return;
       }
@@ -109,7 +105,13 @@ export default {
       // console.log(this.oneThing);
       let this_ = this;
       this_.$axios
-        .post(this.serverUrl + "/api/thing/update", this.oneThing)
+        .post(this.serverUrl + "/api/thing/update", this.oneThing, {
+          headers: {
+            // Authorization: this_.globalData.sessionId,
+            Authorization: this.$cookies.get("sessionId"),
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
         .then(res => {
           return res.data;
         })
@@ -126,7 +128,7 @@ export default {
                 ",错误信息" +
                 data.meta.message
             );
-            this_.$Message.error("修改失败"+data.meta.message);
+            this_.$Message.error("修改失败" + data.meta.message);
           }
         });
     }

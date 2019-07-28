@@ -1,17 +1,20 @@
 import Vue from 'vue'
 import './plugins/axios'
 import App from './App.vue'
-import iView from 'iview';
-import router from './router/router.js';
-import 'iview/dist/styles/iview.css';
+import iView from 'iview'
+import router from './router/router.js'
+import 'iview/dist/styles/iview.css'
 import './plugins/iview.js'
 import './plugins/axios.js'
 import globalData from './utils/globalData.js'
-import VueClipboard from 'vue-clipboard2';
+import VueClipboard from 'vue-clipboard2'
+import VueCookies from 'vue-cookies'
+
 
 // Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(VueClipboard);
+Vue.use(VueCookies);
 
 
 router.beforeEach((to, from, next) => {
@@ -28,7 +31,7 @@ Vue.config.productionTip = false
 Vue.prototype.globalData = globalData
 
 //全局服务器基地址属性
-// Vue.prototype.serverUrl = "http://127.0.0.1:8081/dailylove"
+// Vue.prototype.serverUrl = "http://127.0.0.1:8080/dailylove"
 Vue.prototype.serverUrl = "http://tcualhp.cn:8080/dailylove"
 
 new Vue({

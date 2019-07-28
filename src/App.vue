@@ -1,20 +1,22 @@
 <template>
   <div id="app">
     <!-- 菜单导航 -->
-    <Menu mode="horizontal" active-name="1">
-        <MenuItem name="show" to="show">
-            <Icon type="ios-paper" />
-            展示
-        </MenuItem>
-        <MenuItem name="add" to="add">
-            <Icon type="ios-add-circle" />
-            添加
-        </MenuItem>
-        <MenuItem name="couple" to="couple">
-            <Icon type="ios-people" />
-            组队
-        </MenuItem>
-        <!-- <Submenu name="3">
+    <!-- 登录注册不显示导航 -->
+    <Menu
+      mode="horizontal"
+      active-name="show"
+      v-show="($route.name != 'login' && $route.name != 'register')"
+    >
+      <MenuItem name="show" to="show">
+        <Icon type="ios-paper" />展示
+      </MenuItem>
+      <MenuItem name="add" to="add">
+        <Icon type="ios-add-circle" />添加
+      </MenuItem>
+      <MenuItem name="couple" to="couple">
+        <Icon type="ios-people" />组队
+      </MenuItem>
+      <!-- <Submenu name="3">
             <template slot="title">
                 <Icon type="ios-stats" />
                 统计分析
@@ -32,31 +34,27 @@
         <MenuItem name="4">
             <Icon type="ios-construct" />
             综合设置
-        </MenuItem> -->
+      </MenuItem>-->
     </Menu>
-    <br>
+    <br />
     <!-- <p>Change theme</p>
     <RadioGroup v-model="theme1">
         <Radio label="light"></Radio>
         <Radio label="dark"></Radio>
         <Radio label="primary"></Radio>
-    </RadioGroup> -->
+    </RadioGroup>-->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "app",
-  components: {
-  },
+  components: {},
   data() {
-    return {
-    };
+    return {};
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 
