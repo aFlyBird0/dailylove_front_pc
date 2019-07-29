@@ -4,8 +4,9 @@ import show from '@/views/show.vue';
 import add from '@/views/add.vue';
 import login from '@/views/login.vue';
 import register from '@/views/register.vue';
-import edit from '@/views/edit.vue'
+import edit from '@/views/edit.vue';
 import couple from '@/views/couple.vue';
+import settings from '@/views/settings.vue';
 
 Vue.use(Router)
 
@@ -68,5 +69,13 @@ export default new Router({
             title: "配对"
         },
         component: couple
+    }, {
+        path: "/settings",
+        name: "settings",
+        meta: {
+            showMenu: true,
+            title: "设置"
+        },
+        component: settings
     }]
 })

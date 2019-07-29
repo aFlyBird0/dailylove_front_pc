@@ -3,8 +3,8 @@
     <Table
       highlight-row
       ref="currentRowTable"
-      :loading="loading"
       :row-class-name="getRowClassName"
+      :loading="loading"
       :columns="columns1"
       :data="things"
       @on-current-change="getSelectedRow"
@@ -39,39 +39,91 @@ export default {
         //   title: "ThingId",
         //   key: "thingId"
         // },
-        {
-          title: "用户id",
-          key: "userId",
-          sortable: true
-        },
+        // {
+        //   title: "用户id",
+        //   key: "userId",
+        //   sortable: true
+        // },
+        // {
+        //   title: "用户名",
+        //   key: "username",
+        //   sortable: true
+        // }
         // {
         //   title: "日期",
         //   key: "date"
         // },
         {
+          sortable: true,
           title: "开始时间",
           key: "startTime",
-          sortable: true
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "span",
+                {
+                  style: {
+                    color: (params.row.userId == this.userIdSelf) ? this.fontColorSelf : this.fontColorLove,
+                    'font-weight': params.row.thingId == this.currentThingId ? 'bold': 'normal',  //选中加粗
+                    // "background-color": this.bgColorSelf
+                  }
+                },
+                params.row.startTime
+              )
+            ]);
+          }
         },
         {
           title: "结束时间",
           key: "endTime",
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "span",
+                {
+                  style: {
+                    color: (params.row.userId == this.userIdSelf) ? this.fontColorSelf : this.fontColorLove,
+                    'font-weight': params.row.thingId == this.currentThingId ? 'bold': 'normal',  //选中加粗
+                    // "background-color": this.bgColorSelf
+                  }
+                },
+                params.row.endTime
+              )
+            ]);
+          }
         },
         {
           title: "事件详情",
           key: "detail",
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "span",
+                {
+                  style: {
+                    color: (params.row.userId == this.userIdSelf) ? this.fontColorSelf : this.fontColorLove,
+                    'font-weight': params.row.thingId == this.currentThingId ? 'bold': 'normal',  //选中加粗
+                    // "background-color": this.bgColorSelf
+                  }
+                },
+                params.row.detail
+              )
+            ]);
+          }
         }
       ],
       currentThing: {},
       currentThingId: "",
       oldCurrentThingId: "",
-      userIdSelf: this.globalData.userIdSelf,
+      // userIdSelf: this.globalData.userIdSelf,
+      userIdSelf: this.$cookies.get("userId"),
       sessionId: this.globalData.sessionId,
       userIdLove: null,
       // showEditAndDelete: false,
       loading: false
+      // bgColorSelf: localStorage.getItem("bgColorSelf")
     };
   },
   computed: {
@@ -81,6 +133,33 @@ export default {
         this.currentThing.userId == this.userIdSelf &&
         (this.currentThingId == "" ? false : true)
       );
+    },
+    tableClass: function() {
+      return {
+        "background-color": "#5bc2f58c",
+        /* background-color: var(--bgColorSelf); */
+        color: "#fff"
+      };
+    },
+    bgColorSelf: function() {
+      return localStorage.getItem("bgColorSelf")
+        ? localStorage.getItem("bgColorSelf")
+        : "#6290d162";
+    },
+    bgColorLove: function() {
+      return localStorage.getItem("bgColorLove")
+        ? localStorage.getItem("bgColorLove")
+        : "#e2868373";
+    },
+    fontColorSelf: function() {
+      return localStorage.getItem("fontColorSelf")
+        ? localStorage.getItem("fontColorSelf")
+        : "#fff";
+    },
+    fontColorLove: function() {
+      return localStorage.getItem("fontColorLove")
+        ? localStorage.getItem("fontColorLove")
+        : "#fff";
     }
   },
   methods: {
@@ -133,16 +212,16 @@ export default {
     updateThing: function() {
       this.$router.push({
         name: "edit",
-        params: { oneThing: this.currentThing, sessionId: this.sessionId }
+        params: { oneThing: this.currentThing}
       });
     },
     getRowClassName: function(row, index) {
       // console.log(row);
       // console.log(index);
-      if (index % 2 === 1) {
-        return "demo-table-info-row-blue";
+      if (row.userId == this.$cookies.get("userId")) {
+        return "table-self";
       } else {
-        return "demo-table-info-row-pink";
+        return "table-love";
       }
     }
   }
@@ -165,12 +244,13 @@ li {
 a {
   color: #42b983;
 }
-.ivu-table .demo-table-info-row-blue td {
-  background-color: #5bc2f58c;
-  color: #fff;
+/deep/ .ivu-table .table-self td {
+  background-color: #6290d162;
+  /* background-color: var(--bgColorSelf); */
+  /* color: #fff; */
 }
-.ivu-table .demo-table-info-row-pink td {
-  background-color: #eb97c19f;
-  color: #fff;
+/deep/ .ivu-table .table-love td {
+  background-color: #e2868373;
+  /* color: #fff; */
 }
 </style>

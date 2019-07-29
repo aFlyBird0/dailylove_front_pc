@@ -1,7 +1,7 @@
 <template>
   <div id="show">
     <Row>
-      <Col span="3" offset="18">
+      <Col span="12" offset="6">
         <DatePicker
           type="date"
           :options="options"

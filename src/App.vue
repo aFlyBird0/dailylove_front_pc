@@ -16,6 +16,9 @@
       <MenuItem name="couple" to="couple">
         <Icon type="ios-people" />组队
       </MenuItem>
+      <MenuItem name="settings" to="settings">
+        <Icon type="ios-cog" />设置
+      </MenuItem>
       <!-- <Submenu name="3">
             <template slot="title">
                 <Icon type="ios-stats" />

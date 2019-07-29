@@ -59,7 +59,6 @@ export default {
       // alertShow: false, //事件不能为空的提示,
       //currentTime: dateUtil.getFormatTime(),
       startEndTime: [], //时间选择器显示时间,
-      sessionId: this.globalData.sessionId
     };
   },
   mounted: function() {
