@@ -2,7 +2,7 @@
   <div>
     <h1>组队</h1>
     <!-- <p>我的邀请码: {{globalData.checkCode}}</p> -->
-    <Input v-model="checkCodeInput" placeholder="请输入被邀请人邀请码" />
+    <Input v-model="checkCodeInput" placeholder="输入被邀请人邀请码点击提交即可组队" />
     <Row>
     <Button @click="copyCheckCodeToClipboard">复制我的邀请码到剪切板</Button>
     <Button @click="addCouple">提交</Button>
@@ -36,7 +36,8 @@ export default {
           {
             headers: {
               // Authorization: this_.globalData.sessionId,
-              Authorization: this.$cookies.get("sessionId"),
+              // Authorization: this.$cookies.get("sessionId"),
+              Authorization: this_.globalData.getSessionId(),
               "Access-Control-Allow-Origin": "*"
             }
           }
@@ -62,8 +63,9 @@ export default {
         });
     },
     copyCheckCodeToClipboard: function() {
+      // console.log("点击复制按钮");
       let this_ = this;
-      this.$copyText(this_.globalData.checkCode).then(function(e) {
+      this.$copyText(this_.globalData.getCheckCode()).then(function(e) {
         this_.$Message.success("复制成功");
         console.log(e);
       });

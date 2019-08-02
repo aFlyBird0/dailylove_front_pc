@@ -4,7 +4,7 @@
     <br />
     <br />
     <Row>
-      <Col span="6" offset="9">
+      <Col span="10" offset="7">
         <!-- 请选择开始结束时间 -->
         <TimePicker
           :value="startEndTime"
@@ -21,20 +21,20 @@
     </Row>
     <br />
     <Row>
-      <Col span="6" offset="9">
+      <Col span="10" offset="7">
         <Input v-model="oneThing.detail" placeholder="事件详情" @on-enter="updateThing" />
       </Col>
     </Row>
     <br />
     <Row>
-      <Col span="6" offset="9">
+      <Col span="10" offset="7">
         <Button @click="updateThing" type="primary" style="width: 100%">提交</Button>
       </Col>
     </Row>
     <br />
 
     <Row>
-      <Col span="6" offset="9">
+      <Col span="10" offset="7">
         <Button @click="gotoShow" style="width: 100%">返回展示界面</Button>
       </Col>
     </Row>
@@ -106,8 +106,8 @@ export default {
       this_.$axios
         .post(this.serverUrl + "/api/thing/update", this.oneThing, {
           headers: {
-            // Authorization: this_.globalData.sessionId,
-            Authorization: this.$cookies.get("sessionId"),
+            Authorization: this_.globalData.getSessionId(),
+            // Authorization: this.$cookies.get("sessionId"),
             "Access-Control-Allow-Origin": "*"
           }
         })

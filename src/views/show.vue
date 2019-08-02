@@ -1,5 +1,9 @@
 <template>
   <div id="show">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" :pulling-text="pullingText">
+
+    </van-pull-refresh>
+    <introduce :showIntroduce="showIntroduce"></introduce>
     <Row>
       <Col span="12" offset="6">
         <DatePicker
@@ -18,8 +22,8 @@
     {{serverUrl}}
     <p>这是checkCode: {{globalData.checkCode}}</p>
     <p>这是sessionId: {{globalData.sessionId}}</p>-->
-
     <thing-show @refresh="refresh" :things="things"></thing-show>
+     <BackTop></BackTop>
     <!-- <button @click="getUsers">获取所有用户</button> -->
 
     <!-- <Alert type="warning">确认删除吗</Alert> -->
@@ -33,13 +37,17 @@
 
 <script>
 import thingShow from "../components/thingShow.vue";
+import thingShowScroller from "../components/thingShowScroller.vue";
+import introduce from "../components/introduce.vue";
 import * as dateUtil from "../utils/dateUtil";
 import { setTimeout } from "timers";
 
 export default {
   name: "show",
   components: {
-    thingShow
+    thingShow,
+    introduce,
+    thingShowScroller
   },
   data() {
     return {
@@ -47,13 +55,16 @@ export default {
       page: 1,
       pageSize: 10,
       // userIdSelf: this.globalData.userIdSelf, //自己id  //TODO
-      userIdSelf: this.$cookies.get("userId"),  //自己userId
+      // userIdSelf: this.$cookies.get("userId"),  //自己userId
       userIdLove: 2, //爱人id  //TODO
       // checkCode: this.$route.params.checkCode,
       // sessionId: this.$route.params.sessionId
       selectedDate: "", //日期选择器显示时间
       dateShow: dateUtil.getFormatDate(), //实际展示查询的时间
       //日期选择器的快捷选项
+      isLoading: false,
+      count: 0,
+      pullingText: "重新获取数据中",
       options: {
         shortcuts: [
           {
@@ -95,6 +106,20 @@ export default {
     //获取数据
     this.getThings();
   },
+  computed:{
+    //是否展示介绍界面
+    showIntroduce: function(){
+      //测试指引时使用
+      // this.globalData.removeLaunchTime();
+      let launchTime = this.globalData.getLaunchTime();
+      //获取次数后要及时将次数加一，下次再打开就是1了
+      if(launchTime != 0){
+        return false;
+      }
+      this.globalData.setLaunchTime();
+      return false;
+    }
+  },
   methods: {
     gotoAdd: function() {
       this.$router.push({
@@ -120,8 +145,8 @@ export default {
           },
           {
             headers: {
-              // Authorization: this_.globalData.sessionId,
-              Authorization: this_.$cookies.get("sessionId"),
+              Authorization: this_.globalData.getSessionId(),
+              // Authorization: this_.$cookies.get("sessionId"),
               "Access-Control-Allow-Origin": "*"
             }
           }
@@ -136,7 +161,10 @@ export default {
           //如果授权失败就重新登录
           if(error.response.status == 401){
             this_.$Message.error("用户状态异常，请重新登录");
-            this_.$cookies.remove("sessionId");
+            // this_.$cookies.remove("sessionId");
+            this_.globalData.removeSessionId();
+            this_.globalData.removeUserIdSelf();
+            this_.globalData.removeCheckCode();
             this_.gotoLogin();
           }
         });
@@ -153,6 +181,12 @@ export default {
     refresh: function() {
       this.getThings();
       // console.log("父组件成功监听到子组件事件");
+    },
+    onRefresh: function(){
+      this.count++;
+      this.$Message.info("刷新成功."+"当前是第"+this.count+"次刷新");
+      this.getThings();
+      this.isLoading = false;
     }
   }
 };

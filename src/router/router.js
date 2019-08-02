@@ -7,13 +7,14 @@ import register from '@/views/register.vue';
 import edit from '@/views/edit.vue';
 import couple from '@/views/couple.vue';
 import settings from '@/views/settings.vue';
+import resetPassword from '@/views/resetPassword.vue';
 
 Vue.use(Router)
 
 export default new Router({
     // mode: 'history',
-    path: '/dailylove',
-    mode: 'hash',
+    // path: '/dailylove',
+    // mode: 'hash',
     // base: '/dailylove',
     // base: process.env.BASE_URL,
     // base: process.env.publicPath,
@@ -77,5 +78,13 @@ export default new Router({
             title: "设置"
         },
         component: settings
+    },{
+        path: "/resetPassword",
+        name: "resetPassword",
+        meta:{
+            showMenu: false,
+            title: "找回账号密码"
+        },
+        component: resetPassword
     }]
 })

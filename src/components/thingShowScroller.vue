@@ -30,7 +30,7 @@
 import showVue from "../views/show.vue";
 import * as dateUtil from "../utils/dateUtil";
 export default {
-  name: "thing-show",
+  name: "thing-show-scroller",
   props: {
     things: Array
     // sessionId: String

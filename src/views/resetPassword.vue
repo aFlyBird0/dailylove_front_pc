@@ -1,24 +1,16 @@
 <template>
   <div>
-    <div class="register-wrap">
+    <div>
       <br />
       <ul style="line-height:40px">
         <li>
-          <h1>注册</h1>
+          <h1>找回账号密码</h1>
         </li>
-        <li>
-          <Input
-            type="text"
-            placeholder="请输入用户名"
-            v-model="username"
-            clearable
-            style="width: 200px"
-          />
-        </li>
+
         <li>
           <Input
             type="password"
-            placeholder="请输入密码"
+            placeholder="请输入新密码"
             v-model="password"
             clearable
             style="width: 200px"
@@ -52,12 +44,11 @@
           >{{sendCodeButtonHint}}</Button>
         </li>
         <li>
-          <Button type="primary" v-on:click="register" style="width: 200px">注册</Button>
+          <Button type="primary" v-on:click="resetPassword" style="width: 200px">提交</Button>
         </li>
         <li>
-          已有账号?
-          <router-link to="/login">立即登录</router-link>
-          <!-- <a href="/login">立即登录</a> -->
+          <router-link to="/login">返回登录界面</router-link>
+          <router-link to="/regiter">返回注册界面</router-link>
         </li>
       </ul>
     </div>
@@ -72,8 +63,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      showHint: false,
-      hint: "",
       username: "",
       password: "",
       username: "",
@@ -81,7 +70,6 @@ export default {
       password: "",
       passwordVerify: "",
       code: "",
-      registerType: "email",
       mailSendLeftTime: 0 //剩余多少时间后可以发送邮件, 默认一分钟发一次
       // sendCodeButtonHint: "获取验证码" //发送验证码按钮上的提示语句
     };
@@ -139,10 +127,6 @@ export default {
     },
     //输入检查
     inputCheck() {
-      if (this.username == "") {
-        this.$Message.warning("用户名不能为空");
-        return false;
-      }
       if (this.password == "") {
         this.$Message.warning("密码不能为空");
         return false;
@@ -161,24 +145,22 @@ export default {
       return true;
     },
     //注册
-    register() {
+    resetPassword() {
       /*接口请求*/
       if (!this.inputCheck()) {
         return;
       }
       let this_ = this;
       axios
-        .post(this_.serverUrl + "/api/user/register", {
-          username: this_.username,
+        .post(this_.serverUrl + "/api/user/resetPassword/email", {
           email: this_.email,
           password: this_.password,
-          registerType: this_.registerType,
           mailCode: this_.code
         })
         .then(res => {
           console.log(res.data);
           if (res.data.meta.result == 1) {
-            this_.$Message.success("注册成功");
+            this_.$Message.success("找回用户名密码成功,"+"你的用户名为:"+res.data.data.username);
             this_.$router.push({ name: "login" });
           } else {
             this_.$Message.error(res.data.meta.message);

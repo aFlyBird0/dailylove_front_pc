@@ -8,13 +8,17 @@ import './plugins/iview.js'
 import './plugins/axios.js'
 import globalData from './utils/globalData.js'
 import VueClipboard from 'vue-clipboard2'
-import VueCookies from 'vue-cookies'
+// import VueCookies from 'vue-cookies'
+import vueScroller from 'vue-scroller';
+import { PullRefresh } from 'vant';
 
 
 // Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(VueClipboard);
-Vue.use(VueCookies);
+// Vue.use(VueCookies);
+Vue.use(vueScroller);
+Vue.use(PullRefresh);
 
 
 router.beforeEach((to, from, next) => {
