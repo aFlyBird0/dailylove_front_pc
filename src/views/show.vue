@@ -1,9 +1,8 @@
 <template>
   <div id="show">
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" :pulling-text="pullingText">
-
-    </van-pull-refresh>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" :pulling-text="pullingText"></van-pull-refresh>
     <introduce :showIntroduce="showIntroduce"></introduce>
+    <br />
     <Row>
       <Col span="12" offset="6">
         <DatePicker
@@ -15,6 +14,8 @@
           style="width: 200px"
         ></DatePicker>
       </Col>
+
+      <undo-delete ref="undoDeleteChild" @refresh="refresh" :undoDeletedThingId="deletedThingId"></undo-delete>
     </Row>
     <!-- 选择日期：{{selectedDate}} -->
     <h1>展示</h1>
@@ -22,8 +23,8 @@
     {{serverUrl}}
     <p>这是checkCode: {{globalData.checkCode}}</p>
     <p>这是sessionId: {{globalData.sessionId}}</p>-->
-    <thing-show @refresh="refresh" :things="things"></thing-show>
-     <BackTop></BackTop>
+    <thing-show @refresh="refresh" :things="things" v-on:sendDelete="handleDelete"></thing-show>
+    <BackTop></BackTop>
     <!-- <button @click="getUsers">获取所有用户</button> -->
 
     <!-- <Alert type="warning">确认删除吗</Alert> -->
@@ -39,6 +40,7 @@
 import thingShow from "../components/thingShow.vue";
 import thingShowScroller from "../components/thingShowScroller.vue";
 import introduce from "../components/introduce.vue";
+import undoDelete from "../components/undoDelete.vue";
 import * as dateUtil from "../utils/dateUtil";
 import { setTimeout } from "timers";
 
@@ -47,7 +49,8 @@ export default {
   components: {
     thingShow,
     introduce,
-    thingShowScroller
+    thingShowScroller,
+    undoDelete
   },
   data() {
     return {
@@ -65,6 +68,8 @@ export default {
       isLoading: false,
       count: 0,
       pullingText: "重新获取数据中",
+      deletedThingId: 0, //被删除的thingId，用于撤销删除
+      // activeUndoDelete: false,
       options: {
         shortcuts: [
           {
@@ -105,15 +110,16 @@ export default {
   mounted: function() {
     //获取数据
     this.getThings();
+    this.showLoveMessage();
   },
-  computed:{
+  computed: {
     //是否展示介绍界面
-    showIntroduce: function(){
+    showIntroduce: function() {
       //测试指引时使用
       // this.globalData.removeLaunchTime();
       let launchTime = this.globalData.getLaunchTime();
       //获取次数后要及时将次数加一，下次再打开就是1了
-      if(launchTime != 0){
+      if (launchTime != 0) {
         return false;
       }
       this.globalData.setLaunchTime();
@@ -130,8 +136,8 @@ export default {
     gotoCouple: function() {
       this.$router.push({ name: "couple" });
     },
-    gotoLogin: function(){
-      this.$router.push({ name: "login"});
+    gotoLogin: function() {
+      this.$router.push({ name: "login" });
     },
     getThings: function() {
       let this_ = this;
@@ -140,7 +146,7 @@ export default {
           this_.serverUrl + "/api/thing/get/two",
           {
             // date: dateUtil.getFormatDate(),
-            date: this_.dateShow,
+            date: this_.dateShow
             // userId: this_.userIdSelf
           },
           {
@@ -159,7 +165,7 @@ export default {
         .catch(error => {
           console.log(error.response);
           //如果授权失败就重新登录
-          if(error.response.status == 401){
+          if (error.response.status == 401) {
             this_.$Message.error("用户状态异常，请重新登录");
             // this_.$cookies.remove("sessionId");
             this_.globalData.removeSessionId();
@@ -169,24 +175,64 @@ export default {
           }
         });
     },
-    changeSelectedDate: function(dateNew){
+    changeSelectedDate: function(dateNew) {
       this.selectedDate = dateNew;
       this.dateShow = dateNew;
       // console.log("时间改变为"+dateNew);
       //时间改变后重新获取事件
-      if(this.dateShow != ""){
+      if (this.dateShow != "") {
         this.getThings();
       }
     },
     refresh: function() {
       this.getThings();
       // console.log("父组件成功监听到子组件事件");
+      console.log("重新获取数据");
     },
-    onRefresh: function(){
+    onRefresh: function() {
       this.count++;
-      this.$Message.info("刷新成功."+"当前是第"+this.count+"次刷新");
+      this.$Message.info("刷新成功." + "当前是第" + this.count + "次刷新");
       this.getThings();
       this.isLoading = false;
+    },
+    //七夕特别活动
+    showLoveMessage: function() {
+      let userIdSelf = this.globalData.getUserIdSelf();
+      console.log(userIdSelf);
+      axios
+        .get(
+          "http://api.tianapi.com/txapi/saylove/?key=ef5a4865e200c388aed28afa87ab9403",
+          { key: "ef5a4865e200c388aed28afa87ab9403" },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            }
+          }
+        )
+        .then(result => {
+          let message = result.data.newslist[0].content;
+          return message;
+        })
+        .then(message => {
+          if (userIdSelf == "1" || userIdSelf == "2") {
+            this.$Modal.info({
+              title: "七夕特别惊喜",
+              content: message
+            });
+          }
+        });
+      // .catch(error => {
+      //   console.log(error);
+      // });
+    },
+    //子组件删除事件后需要告诉父组件，父组件需要进行处理，以撤销
+    handleDelete: function(deletedThingId) {
+      this.deletedThingId = deletedThingId;
+      this.getThings();
+      //激活撤销删除组件
+      // this.activeUndoDelete = true;
+      console.log("激活撤销删除组件");
+      this.$refs.undoDeleteChild.active();
     }
   }
 };

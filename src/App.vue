@@ -5,7 +5,7 @@
     <Menu
       mode="horizontal"
       active-name="show"
-      v-show="($route.name != 'login' && $route.name != 'register')"
+      v-show="$route.meta.showMenu"
     >
       <MenuItem name="show" to="show">
         <Icon type="ios-paper" />展示
@@ -39,6 +39,8 @@
             综合设置
       </MenuItem>-->
     </Menu>
+    <!-- 更多界面 -->
+    <more v-show="$route.meta.showMenu"></more>
     <br />
     <!-- <p>Change theme</p>
     <RadioGroup v-model="theme1">
@@ -51,9 +53,11 @@
 </template>
 
 <script>
+import more from './components/more.vue';
+
 export default {
   name: "app",
-  components: {},
+  components: {more},
   data() {
     return {};
   },

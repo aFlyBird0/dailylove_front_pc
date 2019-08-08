@@ -82,8 +82,9 @@ export default {
       passwordVerify: "",
       code: "",
       registerType: "email",
-      mailSendLeftTime: 0 //剩余多少时间后可以发送邮件, 默认一分钟发一次
+      mailSendLeftTime: 0, //剩余多少时间后可以发送邮件, 默认一分钟发一次
       // sendCodeButtonHint: "获取验证码" //发送验证码按钮上的提示语句
+      
     };
   },
   computed:{

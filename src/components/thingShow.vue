@@ -206,6 +206,8 @@ export default {
     deleteThing: function() {
       // console.log("删除thingId为" + this.currentThingId + "的事件,正在制作中");
       let this_ = this;
+      //先把要删除的id保存下来，避免点了删除但是又点了别的，可是浏览器没跟上手点的速度
+      let deletedThingId = this.currentThingId;
       axios
         .post(
           this.serverUrl + "/api/thing/delete",
@@ -223,11 +225,14 @@ export default {
           }
         )
         .then(result => {
+          //成功后把删除的事件id传给父组件，父组件获取后传给撤销删除的组件
+          this_.$emit("sendDelete", deletedThingId);
           this_.$Message.success("删除成功");
         });
       // console.log("重新获取数据");
       // this.showEditAndDelete = false;
-      this.$emit("refresh");
+      //刷新移动到了show的handleDelete中
+      // this.$emit("refresh");
     },
     cancel: function() {
       console.log("取消删除");
