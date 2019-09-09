@@ -1,29 +1,15 @@
 # dailylove
 
-## Project setup
-```
-npm install
-```
+## 使用
+[DailyLOve](http://dailylove.tcualhp.cn:8080/dailylove/)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 简介
+**记录自己每个时间段做了什么，起到提醒自己珍惜时间的作用，并且可以邀请一个人共享记录，互相监督**
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 基本功能介绍
+1. **添加：**添加一个事件，记录某个时间段干了什么
+2. **展示：**按天显示事件，选中自己事件可修改或删除
+3. **组队：**组队后两人可看到对方事件
+4. **设置：**开发中，目前可更改字体颜色
 
-### Run your tests
-```
-npm run test
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

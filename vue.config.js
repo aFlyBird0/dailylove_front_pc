@@ -1,10 +1,10 @@
 module.exports = {
   //后端打包用这个路径
-  publicPath: '/dailylove/',//publicPath取代了baseUrl
+  // publicPath: '/dailylove/',//publicPath取代了baseUrl
   // publicPath: '/dailylove',//publicPath取代了baseUrl
   // publicPath: '/',
   //app用这个路径
-  // publicPath: './',
+  publicPath: './',
   // assetsPublicPath: '/dailylove/',
   // assetsSubDirectory: 'static',
   // assetsPublicPath: '/dailylove/',
